@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .weather-container {
+      max-width: 400px;
+      margin: 50px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .weather-info {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="weather-container">
+    <input type="text" id="cityInput" placeholder="Enter city name">
+    <button onclick="getWeather()">Get Weather</button>
+    <div class="weather-info" id="weatherInfo"></div>
+  </div>
+
+  <script>
+    async function getWeather() {
+      const apiKey = '6b090e77e2e261e620a99c3d9d329c20'; // Replace 'YOUR_API_KEY' with your actual API key from OpenWeatherMap
+      const city = document.getElementById('cityInput').value;
+      const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+      try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        
+        if (response.ok) {
+          const weatherInfo = `
+            <h2>Weather in ${data.name}</h2>
+            <p>Temperature: ${data.main.temp} °C</p>
+            <p>Weather: ${data.weather[0].description}</p>
+          `;
+          document.getElementById('weatherInfo').innerHTML = weatherInfo;
+        } else {
+          document.getElementById('weatherInfo').innerHTML = `<p>${data.message}</p>`;
+        }
+      } catch (error) {
+        console.error('Error fetching weather data:', error);
+      }
+    }
+  </script>
+</body>
+</html>
